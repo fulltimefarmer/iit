@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Marks</string>
+    <string name="tv_name">Name</string>
+    <string name="tv_marks">Marks</string>
+    <string name="tv_id">ID</string>
+    <string name="btn_add_data">Add Data</string>
+    <string name="btn_view_all">View All</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_delete">Delete</string>
+</resources>
