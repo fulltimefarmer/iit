@@ -1,6 +1,4 @@
-# jzhou
-# 2023-06-11
-# ITMD-513
+# jzhou 2023-06-11  ITMD-513
 print("%s" % "Bank Account Program")
 
 pin = "1234"            # Set the correct PIN number
@@ -31,4 +29,4 @@ if success:
     for month in range(1, 13):
         interest = balance * monthly_interest_rate
         balance = balance + interest
-        print("%d \t\t $%.2f \t\t $%.2f" % (month, interest, balance))
+        print("%d \t\t $%.2f \t\t\t $%.2f" % (month, interest, balance))
