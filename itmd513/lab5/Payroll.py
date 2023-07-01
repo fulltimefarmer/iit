@@ -1,7 +1,15 @@
 import os 
 import payroll_functions
 
+# Jun Zhou
+# June 26th, 2023
+# Lab5
+# ITMD513
+
 def menu():
+    """
+    Displays the payroll menu options.
+    """
     pstr = "Welcome to the Payroll Program\n"
     pstr += "Choose from the following payroll choices\n"
     pstr += "(1) A gross PR payroll report for all employees\n"
@@ -14,6 +22,13 @@ def menu():
 
 
 def process_option(choice, file_name):
+    """
+    Processes the user's choice and calls the corresponding payroll function.
+
+    Parameters:
+        choice (str): The user's choice.
+        file_name (str): The name of the payroll file.
+    """
     if (choice == "1") :
         payroll_functions.print_all(file_name)
     elif (choice == "2") :
