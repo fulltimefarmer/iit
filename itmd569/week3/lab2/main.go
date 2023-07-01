@@ -20,7 +20,7 @@ type Facilities struct {
 }
 
 func (f Facilities) calcYearlyCost() float64 {
-    return 12.0 * f.RentCost + f.MaintenanceCost
+    return 12.0 * f.RentCost
 }
 
 type Cost interface {

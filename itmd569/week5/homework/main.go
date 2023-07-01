@@ -44,17 +44,17 @@ func getCountryByAbbreviation(countries []CountryInfo, abbreviation string) Coun
 	// TODO: Implement the logic to find and return the country with the given abbreviation
 	// Iterate over the countries slice and check the abbreviation field for a match
 	// Return the country when found, or a default CountryInfo if not found
-
-	// Placeholder code:
-	var country CountryInfo
-	return country
+	for _, country := range countries {
+		if country.Abbreviation == abbreviation {
+			return country
+		}
+	}
+	return CountryInfo{}
 }
 
 func main() {
 	// Step 1: Use the http.Get function to get the response from the API endpoint
-	response, err :=
-		http.Get("https://api.sampleapis.com/countries/countries")
-
+	response, err := http.Get("https://api.sampleapis.com/countries/countries")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -78,12 +78,34 @@ func main() {
 	}
 
 	// Sort countries by population and print them
+	sortByPopulation(countries)
+	fmt.Println("Countries sorted by population in descending order:")
+	for _, country := range countries {
+		fmt.Println("Name:", country.Name)
+		fmt.Println("Population:", country.Population)
+		fmt.Println("Capital:", country.Capital)
+		fmt.Println("")
+	}
+	fmt.Println("------")
 
 	// Sort countries by name and print them
+	sortByName(countries)
+	fmt.Println("Countries sorted by name in alphabetical order:")
+	for _, country := range countries {
+		fmt.Println("Name:", country.Name)
+		fmt.Println("Population:", country.Population)
+		fmt.Println("Capital:", country.Capital)
+		fmt.Println("")
+	}
+	fmt.Println("------")
 
 	// Define and implement a function to get a country by its abbreviation
-
 	// Use the above function to get and print the details of the country with abbreviation 'US'
-
 	// Print the media URLs for each country
+	abbreviation := "US"
+	country := getCountryByAbbreviation(countries, abbreviation)
+	fmt.Println("Country details:")
+	fmt.Println("Name:", country.Name)
+	fmt.Println("Population:", country.Population)
+	fmt.Println("Capital:", country.Capital)
 }

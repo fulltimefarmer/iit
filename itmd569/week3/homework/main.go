@@ -11,8 +11,7 @@ type Employee struct {
 }
 
 func (e Employee) calcYearlyCost() float64 {
-    e.TotalCost = 12.0 * e.MonthlySalary
-    return e.TotalCost
+    return 12.0 * e.MonthlySalary
 }
 
 type Facilities struct {
@@ -23,8 +22,7 @@ type Facilities struct {
 }
 
 func (f Facilities) calcYearlyCost() float64 {
-    f.TotalCost = 12.0 * f.RentCost + f.MaintenanceCost
-    return f.TotalCost
+    return 12.0 * (f.RentCost + f.MaintenanceCost)
 }
 
 type Government struct {
@@ -34,12 +32,7 @@ type Government struct {
 }
 
 func (g Government) calcYearlyCosts() float64 {
-    taxableAmount := g.TotalEarnings - g.TotalCosts
-    taxableAmount -= taxableAmount * g.CorporateTax
-    if taxableAmount < 0 {
-        return 0
-    }
-    return taxableAmount
+    return g.TotalEarnings * 0.21
 }
 
 type TotalCosts struct {
@@ -64,6 +57,7 @@ func main () {
 		MonthlySalary: 10000.0,
 	}
 	empCost := calcYearlyCost(emp)
+    emp.TotalCost = empCost
     fmt.Printf("%s costs the company $%.0f per year.\n", emp.Name, empCost)
 
     fac := Facilities {
@@ -72,26 +66,31 @@ func main () {
         MaintenanceCost: 1000,
     }
     facCost := calcYearlyCost(fac)
+    fac.TotalCost = facCost
     fmt.Printf("%s costs the company $%.0f per year.\n", fac.Type, facCost)
 
-    totalCost := empCost + facCost
-    fmt.Printf("Total company costs: $%.0f per year.\n", totalCost)
+    totalCompanyCost := empCost + facCost
+    fmt.Printf("Total company costs: $%.0f per year.\n", totalCompanyCost)
 
     gov := Government {
         CorporateTax: 0.21,
-        TotalEarnings: 1000000.0,
-        TotalCosts: totalCost,
+        TotalEarnings: 10000000.0,
     }
 
     govCost := gov.calcYearlyCosts()
+    gov.TotalCosts = govCost
     fmt.Printf("The government costs: $%.2f per year.\n", govCost)
 
-    total := TotalCosts {
+    totalCosts := TotalCosts {
         Employee: emp,
         Facilities: fac,
         Government: gov,
     }
 
-    totalProfit := total.TotalEarnings - total.TotalCosts - govCost
-    fmt.Printf("The total profit for the company: $%.2f per year.\n", totalProfit)
+    profit := totalCosts.Government.TotalEarnings - 
+        (totalCosts.Employee.TotalCost) - 
+        (totalCosts.Facilities.TotalCost) - 
+        (totalCosts.Government.TotalCosts)
+
+    fmt.Printf("Total Profit: $%.2f \n", profit)
 }
