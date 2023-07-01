@@ -1,5 +1,6 @@
 import os 
-	
+import payroll_functions
+
 def menu():
     pstr = "Welcome to the Payroll Program\n"
     pstr += "Choose from the following payroll choices\n"
@@ -10,65 +11,32 @@ def menu():
     pstr += "(5) Modify an exist employee\n"
     pstr += "(6) Quit Program"
     print (pstr)
-   		
-def printall():
-    empFile = open("employees.txt", "r")
-    for line in empFile :
-        empInfo = line.split(" ")
-        grossPay = float(empInfo[2]) * float(empInfo[3])
-        print("%s %s %s %s $%4.2f" % (empInfo[0], empInfo[1], empInfo[2], empInfo[3], grossPay))
-    empFile.close()
-    
-def printEmp():
-    empFile = open("employees.txt", "r")
-    inputStr = input("Enter in a full name to search employee ")
-    line = empFile.readline()
-    for line in empFile :
-        empInfo = line.split(" ")
-        grossPay = float(empInfo[2]) * float(empInfo[3])
-        if (inputStr == empInfo[0] + " " + empInfo[1]):
-            print("%s %s %s %s $%4.2f" % (empInfo[0], empInfo[1], empInfo[2], empInfo[3], grossPay))
-            break
-    empFile.close()
-    
-def addEmp():
-    inputStr = input("Enter in a name to search employee ")
 
-def deleteEmp():
-    empFile = open("employees.txt", "r")
-    temFile = open("temp.txt", "w")
-    inputStr = input("Enter in a full name to delete the employee ")
-    for line in empFile :
-        empInfo = line.split(" ")
-        if (inputStr != empInfo[0] + " " + empInfo[1]):
-            temFile.write(line)
-    os.remove("employees.txt")
-    os.rename("temp.txt", "employees.txt")
- 
-def modifyEmp():
-    inputStr = input("Enter in a name to search employee ")
 
-def exitApp():
-    os._exit(0)
-
-def main() :
-    menu()
-    choice = int(input("Enter Menu Choice Now! "))
-    if (choice == 1) :
-        printall()
-    elif (choice == 2) :
-        printEmp()
-    elif (choice == 3) :
-        addEmp()
-    elif (choice == 4) :
-        deleteEmp()
-    elif (choice == 5) :
-        modifyEmp()
-    elif (choice == 6) :
-        exitApp()
+def process_option(choice, file_name):
+    if (choice == "1") :
+        payroll_functions.print_all(file_name)
+    elif (choice == "2") :
+        payroll_functions.print_emp(file_name)
+    elif (choice == "3") :
+        payroll_functions.add_emp(file_name)
+    elif (choice == "4") :
+        payroll_functions.delete_emp(file_name)
+    elif (choice == "5") :
+        payroll_functions.modify_emp(file_name)
+    elif (choice == "6") :
+        os._exit(0)
     else :
         print("Invalid Choice")
-        exitApp()
+        os._exit(0)
 
-main()
 
+def main():
+    file_name = input("Enter the payroll file name: ")
+    menu()
+    option = input("Enter your choice (1-6): ")
+    process_option(option, file_name)
+
+
+if __name__ == "__main__":
+    main()
