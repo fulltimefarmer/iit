@@ -1,0 +1,63 @@
+Implements handlers.go for giving template.
+courseDatabase.go
+var Courses []Course
+type Course struct {
+	CRN         string     `json:"crn"`
+	Title       string     `json:"title"`
+	Professor   *Professor `json:"professor"`
+	Description string     `json:"description"`
+}
+type Professor struct {
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname`
+}
+func CreateCourses() {
+	professor1 := Professor{Firstname: "Billy", Lastname: "P"}
+	professor2 := Professor{Firstname: "Travis", Lastname: "S"}
+	professor3 := Professor{Firstname: "Bob", Lastname: "S"}
+	// feel free to make these more interesting :(
+	Courses = append(Courses, Course{CRN: "1", Title: "Golang 101", Professor: &professor1, Description: "The best class ever 1"})
+	Courses = append(Courses, Course{CRN: "2", Title: "Golang 102", Professor: &professor3, Description: "The best class ever 2"})
+}
+
+main.go
+func main() {
+	courseDatabase.CreateCourses()
+	router := mux.NewRouter()
+	router.HandleFunc("/courses/{crn}", handlers.GetCourseByCRN).Methods("GET")
+	router.HandleFunc("/courses/", handlers.GetAllCourses).Methods("GET")
+	router.HandleFunc("/courses/{crn}", handlers.UpdateCourse).Methods("PUT")
+	router.HandleFunc("/courses/{crn}", handlers.CreateCourse).Methods("POST")
+	router.HandleFunc("/courses/{crn}", handlers.DeleteCourse).Methods("DELETE")
+	http.ListenAndServe(":8080", router)
+}
+
+handlers.go
+func GetCourseByCRN(w http.ResponseWriter, r *http.Request) {
+	// implement
+
+}
+// POST
+func CreateCourse(w http.ResponseWriter, r *http.Request) {
+	// implement
+}
+// GET
+func GetAllCourses(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(courseDatabase.Courses)
+}
+// PUT
+func UpdateCourse(w http.ResponseWriter, r *http.Request) {
+	// implement
+}
+// DELETE
+func DeleteCourse(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")  // set application/jsonheader
+	params := mux.Vars(r)                               // retrieve the parameters in the request
+	for index, course := range courseDatabase.Courses { // loop through the courses database
+		if course.CRN == params["crn"] { // check if the course CRN matches the request parameters
+			courseDatabase.Courses = append(courseDatabase.Courses[:index], courseDatabase.Courses[index+1:]...) // remove that course from the database
+			break
+		}
+	}
+	json.NewEncoder(w).Encode(courseDatabase.Courses) // encode the entire database and send response back to requester
+}

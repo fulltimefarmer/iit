@@ -1,0 +1,25 @@
+Handler Steps:
+1. Implement the GetCourseByCRN() handler logic (GET REQUEST)
+– Set the application/json header.
+– Retrieve the parameters from the request.
+– Loop through every course in coursesDatabase.Courses.
+– Check if the course’s CRN matches the CRN in the parameters.
+– If there is a match, encode the course into the response writer to return the requested course to the requester.
+2. Implement the CreateCourse() handler logic (POST REQUEST)
+– Set the application/json header.
+– Create a new Course instance.
+– Decode the response body into the Course instance.
+– Append the new course to courseDatabase.Courses.
+– Encode the new course using the response writer to return the response back to the caller.
+3. Implement the UpdateCourse() handler logic (PUT REQUEST)
+– Set the application/json header.
+– Retrieve the parameters from the request.
+– Loop through every course in courseDatabase.Courses using the range keyword and check if the course’s CRN is equal to the CRN parameter in the request.
+– If there is a match, modify courseDatabase.Courses to remove the old course.
+– Create a new Course instance.
+– Decode the response body into the Course instance.
+– Set the new course’s CRN equal to the CRN in the request parameters.
+– Append the new course to courseDatabase.Courses.
+– Encode the new course using the response writer to return the response back to the requester.
+– This is very similar to the DeleteCourse handler, but instead of removing the
+course altogether, we are updating the course’s CRN.

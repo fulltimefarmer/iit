@@ -9,13 +9,24 @@ import (
 
 // GET
 func GetCourseByCRN(w http.ResponseWriter, r *http.Request) {
-	// implement
-
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for _, course := range courseDatabase.Courses {
+		if course.CRN == params["crn"] {
+			json.NewEncoder(w).Encode(course)
+			return
+		}
+	}
+	http.NotFound(w, r)
 }
 
 // POST
 func CreateCourse(w http.ResponseWriter, r *http.Request) {
-	// implement
+	w.Header().Set("Content-Type", "application/json")
+	var course courseDatabase.Course
+	_ = json.NewDecoder(r.Body).Decode(&course)
+	courseDatabase.Courses = append(courseDatabase.Courses, course)
+	json.NewEncoder(w).Encode(course)
 }
 
 // GET
