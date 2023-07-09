@@ -20,13 +20,22 @@ type Professor struct {
 }
 
 func main() {
-	testPUTRequest()    // update course
-	testDELETERequest() // delete course
-	testPOSTRequest()   // create new course
-
+	TestGetRequest()    // get course by CRN
+	TestPUTRequest()    // update course
+	TestDELETERequest() // delete course
+	TestPOSTRequest()   // create new course
 }
 
-func testPOSTRequest() {
+func TestGetRequest() {
+	fmt.Println("\nTesting GET Request (Get Class by CRN)")
+
+	resp, _ := http.Get("http://localhost:8080/courses/1")
+	var course Course
+	_ = json.NewDecoder(resp.Body).Decode(&course)
+	fmt.Println("Get the Course[CRN=1]: ", course)
+}
+
+func TestPOSTRequest() {
 	fmt.Println("\nTesting POST Request (Creating Class)")
 
 	professor := Professor{
@@ -71,7 +80,7 @@ func testPOSTRequest() {
 
 }
 
-func testDELETERequest() {
+func TestDELETERequest() {
 	fmt.Println("\nTesting DELETE Request (Deleting Class)")
 
 	client := &http.Client{}
@@ -104,7 +113,7 @@ func testDELETERequest() {
 
 }
 
-func testPUTRequest() {
+func TestPUTRequest() {
 	fmt.Println("\nTesting PUT Request (Updating Class)")
 	client := &http.Client{}
 
