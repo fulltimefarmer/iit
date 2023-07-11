@@ -1,4 +1,5 @@
 import os
+import time
 from tkinter import *
 from tkinter import messagebox
 from contacts import *
@@ -16,7 +17,7 @@ def addContact():
     contactlist.append([nameVar.get(), phoneVar.get()])
     setList()
     messagebox.showinfo("Success", "Contacts added successfully!")
-
+    
 def updateContact():
     contactlist[selection()]=[nameVar.get(), phoneVar.get()]
     setList()
@@ -80,7 +81,7 @@ def buildFrame():
     frame1 = Frame(root) # allow for selection of names
     frame1.pack()
     scroll = Scrollbar(frame1, orient=VERTICAL)
-    select = Listbox(frame1, yscrollcommand=scroll.set, height=7)
+    select = Listbox(frame1, yscrollcommand=scroll.set, height=9)
     scroll.config (command=select.yview)
     scroll.pack(side=RIGHT, fill=Y)
     select.pack(side=LEFT,  fill=BOTH)
