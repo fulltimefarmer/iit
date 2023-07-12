@@ -4,7 +4,6 @@ from contacts import *
 def initTable():
     conn = sqlite3.connect('contacts.db')
     cursor = conn.cursor()
-    cursor.execute('DROP TABLE IF EXISTS max')
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS max(
         id INTEGER PRIMARY KEY AUTOINCREMENT,

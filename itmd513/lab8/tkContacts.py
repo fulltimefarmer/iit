@@ -8,6 +8,8 @@ from myDatabase import *
 # Lab8
 # ITMD513
 
+stack = []
+
 def selection():
     try:
         index = int(select.curselection()[0])
@@ -21,41 +23,81 @@ def selection():
 
 
 def addContact():
+    name, phone = nameVar.get(), phoneVar.get()
     try:
-        printList()
-        createContact(nameVar.get(), phoneVar.get())
-    except e:
-        print(e)
+        print('contact number before add operation: %d' % len(contacts))
+        createContact(name, phone)
+    except:
         messagebox.showwarning("Warning", "Please enter a value in both the fields.")
     else:
+        print("New contact whit Name: %s and Phone: %s added." % (nameVar.get(), phoneVar.get()))
         setList()
-        messagebox.showinfo("Success", "Contacts added successfully!")
+        print('contact number after add operation: %d' % len(contacts))
+        print('All contacts after add opertion:')
+        for record in contacts:
+            print(record)
 
 
 def editContact():
     try:
-        printList()
+        print('contact number before update operation: %d' % len(contacts))
+        contact = findById(currentId)
         updateContact(currentId, nameVar.get(), phoneVar.get())
-    except:
+        stack.append(('EDIT', currentId, contact[1], contact[2], nameVar.get(), phoneVar.get()))
+    except e:
+        print(e)
         messagebox.showwarning("Warning", "Please enter valid value in both the fields.")
     else:
+        print("Success update record from Name: %s and Phone: %s to Name: %s and Phone: %s." % (contact[1], contact[2], nameVar.get(), phoneVar.get()))
         setList()
-        messagebox.showinfo("Success", "Contacts added successfully!")
+        print('contact number after update operation: %d' % len(contacts))
+        print('All contacts after edit opertion:')
+        for record in contacts:
+            print(record)
 
 
 def removeContact():
-    _, name, _ = selection()
+    _, name, phone = selection()
     result = messagebox.askquestion('Confirmation', ('Are you sure you want to delete %s?' % name))
     if result == 'yes':
-        printList()
+        print('contact number before delete operation: %d' % len(contacts))
         deleteContact(currentId)
+        stack.append(('DELETE', currentId, name, phone))
+        print("Success delete record Name: %s and Phone: %s." % (name, phone))
         setList()
+        print('contact number after delete operation: %d' % len(contacts))
+        print('All contacts after delete opertion:')
+        for record in contacts:
+            print(record)
+
+
+def rollback():
+    if len(stack) > 0:
+        operation = stack.pop()
+        if operation[0] == 'EDIT':
+            result = messagebox.askquestion('Confirmation', ('Are you sure you want to revert edit opertion for %s?' % operation[4]))
+            if result == 'yes':
+                updateContact(operation[1], operation[2], operation[3])
+                print("Reverted EDIT operation: Updated record from Name: %s and Phone: %s to Name: %s and Phone: %s." % (operation[4], operation[5], operation[2], operation[3]))
+                setList()
+        elif operation[0] == 'DELETE':
+            result = messagebox.askquestion('Confirmation', ('Are you sure you want to revert delete opertion for %s?' % operation[2]))
+            if result == 'yes':
+                createContact(operation[2], operation[3])
+                print("Reverted DELETE operation: Added contact with Name: %s and Phone: %s." % (operation[2], operation[3]))
+                setList()
+        print('All contacts after undo opertion:')
+        for record in contacts:
+            print(record)
+    else:
+        messagebox.showwarning("Warning", "No opertion can revert!")
 
 
 def loadContact():
     _, name, phone = selection()
     nameVar.set(name)
     phoneVar.set(phone)
+    opertion = None
 
 
 def exitProgram():
@@ -83,11 +125,13 @@ def buildFrame():
     btn1 = Button(frame1,text=' Add  ',command=addContact)
     btn2 = Button(frame1,text='Update',command=editContact)
     btn3 = Button(frame1,text='Delete',command=removeContact)
-    btn4 = Button(frame1,text=' Load ',command=loadContact)
+    btn4 = Button(frame1,text='Rollback',command=rollback)
+    btn5 = Button(frame1,text=' Load ',command=loadContact)
     btn1.pack(side=LEFT)
     btn2.pack(side=LEFT)
     btn3.pack(side=LEFT)
     btn4.pack(side=LEFT)
+    btn5.pack(side=LEFT)
     frame1 = Frame(root) # allow for selection of names
     frame1.pack()
     scroll = Scrollbar(frame1, orient=VERTICAL)
@@ -102,22 +146,19 @@ def buildFrame():
     return root
 
 
-def printList():
-    print('Current contacts:')
-    for record in contacts:
-        print(record)
-
-
 def setList():
     global contacts
     contacts = readContact()
     contacts.sort(key = lambda x : x[1])
-    print('Contacts after opertion:')
-    for record in contacts:
-        print(record)
     select.delete(0, END)
     for _, name, _ in contacts:
         select.insert(END, name)
+
+
+def findById(id):
+    for element in contacts:
+        if element[0] == id:
+            return element
 
 
 if __name__ == "__main__":
